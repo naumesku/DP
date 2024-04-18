@@ -17,7 +17,6 @@ class User(AbstractUser):
     token = models.CharField(max_length=4, verbose_name='токен', **NULLABLE)
     payment_session_id = models.CharField(max_length=300, verbose_name='ID сессии оплаты', **NULLABLE)
 
-
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
 

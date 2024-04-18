@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 from users.forms import *
@@ -20,7 +20,7 @@ class RegisterView(CreateView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.object=form.save()
+        self.object = form.save()
         phone = self.object.phone
         key = token_generate()
         self.object.token = key
@@ -30,19 +30,22 @@ class RegisterView(CreateView):
 
         return redirect('users:confirm_phone')
 
-class UserUpdateView(LoginRequiredMixin, UpdateView ):
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     """Представление изменения данных пользователя"""
     model = UserRegisterForm,
     success_url = reverse_lazy('publications:index')
-    form_class = UserForm
+    form_class = UserRegisterForm
 
     def get_object(self, queryset=None):
         return self.request.user
+
 
 @login_required
 def delete_user_danger(request):
     """Представление предупреждения удаления пользователя"""
     return render(request, 'users/user_delete.html')
+
 
 @login_required
 def delete_user(request, user_id):
@@ -50,6 +53,7 @@ def delete_user(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     user.delete()
     return redirect(reverse('publications:index'))
+
 
 @login_required
 def payment_vip(request):
@@ -62,6 +66,7 @@ def payment_vip(request):
     context_data = {'link': link}
     return render(request, 'users/payment_vip.html', context_data)
 
+
 def get_all_users(request):
     """Функция получения пользователей"""
     users = User.objects.filter(
@@ -69,6 +74,7 @@ def get_all_users(request):
         is_superuser=False,
     )
     return render(request, 'users/users_list.html', {'users': users})
+
 
 def toggle_activity_user(request, pk):
     """Функция активации/деактивации пользователя"""
@@ -80,6 +86,7 @@ def toggle_activity_user(request, pk):
     user_item.save()
 
     return redirect(reverse('users:user_list'))
+
 
 def get_token(request):
     """Функция получения и проверки токена от клиента"""
@@ -99,6 +106,7 @@ def get_token(request):
 
     return render(request, 'users/confirm_phone.html', {'form': GetTokenForm})
 
+
 def resending_token(request):
     """Повторной отправки токена клиенту"""
     if request.method == "POST":
@@ -109,7 +117,7 @@ def resending_token(request):
             token = token_generate()
             user.token = token
             user.save()
-            print("Происходит отправка смс токена") #send_token(phone, token)
+            send_token(phone, token)
 
             return redirect(reverse('users:confirm_phone'))
 

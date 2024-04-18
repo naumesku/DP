@@ -1,6 +1,7 @@
 from django.core.management import BaseCommand
 from users.models import User
 
+
 class Command(BaseCommand):
     """Класс создания админа"""
     def handle(self, *args, **options):

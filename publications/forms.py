@@ -12,7 +12,7 @@ class PublicationForm(forms.ModelForm):
         self.user = user
         super(PublicationForm, self).__init__(*args, **kwargs)
 
-        if not user.is_vip:
+        if not self.user.is_vip:
             del self.fields['is_pay']
 
         for field_name, field in self.fields.items():

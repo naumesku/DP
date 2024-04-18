@@ -2,12 +2,12 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from users.models import User
 from django import forms
 
+
 class UserRegisterForm(UserCreationForm):
     """Форма для регистрации пользователя"""
     class Meta:
         model = User
-        fields = ('phone', 'password1', 'password2')
-
+        fields = ('phone', 'avatar', 'town', 'first_name', 'last_name')
 
     def clean_phone(self):
         """Валидация номера телефона"""
@@ -34,13 +34,15 @@ class UserForm(UserChangeForm):
         super().__init__(*args, **kwargs)
         self.fields['password'].widget = forms.HiddenInput()
         for field_name, field in self.fields.items():
-            if not field_name in ['avatar', 'is_active_mail']:
+            if field_name not in ['avatar', 'is_active_mail']:
                 field.widget.attrs['class'] = 'form-control'
+
 
 class GetTokenForm(forms.Form):
     """Форма получения токена от пользователя"""
     phone = forms.CharField(widget=forms.TextInput())
     token = forms.CharField(widget=forms.TextInput())
+
 
 class NewTokenForm(forms.Form):
     """Форма повторной отправки токена"""

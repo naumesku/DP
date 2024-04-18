@@ -45,6 +45,7 @@ def retrieve_a_session(session_id):
     print('sessions=', sessions)
     return payment_status
 
+
 def token_generate():
     """Функция генерации одноразового ключа"""
     key = ''.join([str(random.randint(0, 9)) for _ in range(4)])

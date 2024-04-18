@@ -12,7 +12,13 @@ class PublicationsListView(ListView):
     """Представление списка публикаций"""
     model = Publication
 
-class PublicationCreateView(LoginRequiredMixin,CreateView):
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_active=True)
+        return queryset
+
+
+class PublicationCreateView(LoginRequiredMixin, CreateView):
     """Представление создания публикации"""
     model = Publication
     form_class = PublicationForm
@@ -23,6 +29,7 @@ class PublicationCreateView(LoginRequiredMixin,CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+
 class PublicationsDetailView(DetailView):
     """Представление для просмотра одной публикации"""
     model = Publication
@@ -32,6 +39,7 @@ class PublicationsDetailView(DetailView):
         context_data = super().get_context_data(**kwargs)
         context_data['publications'] = Publication.objects.filter(id=self.kwargs.get('pk'))
         return context_data
+
 
 class PublicationsUpdateView(LoginRequiredMixin, UpdateView):
     """Представление для обновления одной публикации"""
@@ -46,10 +54,12 @@ class PublicationsUpdateView(LoginRequiredMixin, UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+
 class PublicationsDeleteView(LoginRequiredMixin, DeleteView):
     """Представление для обновления одной публикации"""
     model = Publication
     success_url = reverse_lazy('publications:index')
+
 
 @login_required
 def main_public(request):

@@ -2,6 +2,8 @@
 
 from django.db import migrations, models
 
+from conf_my import NULLABLE
+
 
 class Migration(migrations.Migration):
 
@@ -18,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='publication',
             name='photo',
-            field=models.ImageField(blank=True, null=True, upload_to='publications/', verbose_name='фото'),
+            field=models.ImageField(**NULLABLE, upload_to='publications/', verbose_name='фото'),
         ),
     ]

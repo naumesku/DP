@@ -4,6 +4,7 @@ from django.db import models
 from conf_my import NULLABLE
 from django.contrib.auth import get_user_model
 
+
 class Publication(models.Model):
     """Модель публикации"""
     title = models.CharField(max_length=250, verbose_name='название')
@@ -20,7 +21,6 @@ class Publication(models.Model):
         else:
             self.author = self.author
         super().save(*args, **kwargs)
-
 
     def __str__(self):
         return
